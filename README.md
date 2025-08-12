@@ -55,3 +55,5 @@ Make sure to deploy the output of `npm run build`
 This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
 
 ---
+
+<img width="1106" height="816" alt="Screenshot 2025-08-13 004555" src="https://github.com/user-attachments/assets/50064209-43ff-47d4-820b-02c5b804b388" />
