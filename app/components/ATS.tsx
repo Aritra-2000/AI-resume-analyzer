@@ -1,4 +1,6 @@
 import React from 'react'
+import { getScoreTier } from './ScoreBadge';
+
 
 interface Suggestion {
   type: "good" | "improve";
@@ -11,34 +13,31 @@ interface ATSProps {
 }
 
 const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
-  // Determine background gradient based on score
-  const gradientClass = score > 69
-    ? 'from-green-100'
-    : score > 49
-      ? 'from-yellow-100'
-      : 'from-red-100';
+  const safeScore = Math.max(0, Math.min(100, Math.round(score || 0)));
+  const tier = getScoreTier(safeScore);
 
-  // Determine icon based on score
-  const iconSrc = score > 69
-    ? '/icons/ats-good.svg'
-    : score > 49
-      ? '/icons/ats-warning.svg'
-      : '/icons/ats-bad.svg';
+  const gradientClass =
+    tier === 'good'    ? 'from-green-100' :
+    tier === 'average' ? 'from-yellow-100' :
+                         'from-red-100';
 
-  // Determine subtitle based on score
-  const subtitle = score > 69
-    ? 'Great Job!'
-    : score > 49
-      ? 'Good Start'
-      : 'Needs Improvement';
+  const iconSrc =
+    tier === 'good'    ? '/icons/ats-good.svg' :
+    tier === 'average' ? '/icons/ats-warning.svg' :
+                         '/icons/ats-bad.svg';
+
+  const subtitle =
+    tier === 'good'    ? 'Great Job!' :
+    tier === 'average' ? 'Good Start' :
+                         'Needs Improvement';
 
   return (
-    <div className={`bg-gradient-to-b ${gradientClass} to-white rounded-2xl shadow-md w-full p-6`}>
+      <div className={`bg-gradient-to-b ${gradientClass} to-white rounded-2xl shadow-md w-full p-6`}>
       {/* Top section with icon and headline */}
       <div className="flex items-center gap-4 mb-6">
         <img src={iconSrc} alt="ATS Score Icon" className="w-12 h-12" />
         <div>
-          <h2 className="text-2xl font-bold">ATS Score - {score}/100</h2>
+          <h2 className="text-2xl font-bold">ATS Score - {safeScore}/100</h2>
         </div>
       </div>
 
