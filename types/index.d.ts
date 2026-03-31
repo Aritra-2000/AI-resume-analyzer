@@ -14,45 +14,21 @@ interface Resume {
   feedback: Feedback;
 }
 
-interface Feedback {
-  overallScore: number;
-  ATS: {
-    score: number;
-    tips: {
-      type: "good" | "improve";
-      tip: string;
-    }[];
-  };
-  toneAndStyle: {
-    score: number;
-    tips: {
-      type: "good" | "improve";
-      tip: string;
-      explanation: string;
-    }[];
-  };
-  content: {
-    score: number;
-    tips: {
-      type: "good" | "improve";
-      tip: string;
-      explanation: string;
-    }[];
-  };
-  structure: {
-    score: number;
-    tips: {
-      type: "good" | "improve";
-      tip: string;
-      explanation: string;
-    }[];
-  };
-  skills: {
-    score: number;
-    tips: {
-      type: "good" | "improve";
-      tip: string;
-      explanation: string;
-    }[];
-  };
+interface FeedbackCategory {
+  score: number;  // 0-100, always clamped before display
+  tips: {
+    type: "good" | "improve";
+    tip: string;
+    explanation?: string; // ATS tips don't have explanation
+  }[];
 }
+
+interface Feedback {
+  overallScore?: number;  // Optional — we compute this client-side from sub-scores
+  ATS?: FeedbackCategory;
+  toneAndStyle?: FeedbackCategory;
+  content?: FeedbackCategory;
+  structure?: FeedbackCategory;
+  skills?: FeedbackCategory;
+  error?: string; // Set when AI analysis fails entirely
+}

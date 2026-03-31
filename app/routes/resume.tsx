@@ -74,13 +74,26 @@ const Resume = () => {
                 <section className="feedback-section">
                     <h2 className="text-4xl !text-black font-bold">Resume Review</h2>
                     {feedback ? (
-                        <div className="flex flex-col gap-8 animate-in fade-in duration-1000">
-                            <Summary feedback={feedback} />
-                            <ATS score={feedback.ATS.score || 0} suggestions={feedback.ATS.tips || []} />
-                            <Details feedback={feedback} />
+                        <div className="flex flex-col gap-8 animate-in fade-in duration-1000 w-full">
+                            {('error' in feedback || !feedback.ATS) ? (
+                                <div className="p-6 bg-red-50 border border-red-200 rounded-xl text-red-700">
+                                    <h3 className="text-xl font-bold mb-2">Analysis Failed</h3>
+                                    <p>{(feedback as any).error || "The AI was unable to analyze this resume. This usually happens if the file content couldn't be read or the AI provider is busy."}</p>
+                                    <Link to="/upload" className="mt-4 inline-block text-blue-600 underline">Try Uploading Again</Link>
+                                </div>
+                            ) : (
+                                <>
+                                    <Summary feedback={feedback} />
+                                    <ATS score={feedback.ATS?.score || 0} suggestions={feedback.ATS?.tips || []} />
+                                    <Details feedback={feedback} />
+                                </>
+                            )}
                         </div>
                     ) : (
-                        <img src="/images/resume-scan-2.gif" className="w-full" />
+                        <div className="w-full flex flex-col items-center">
+                            <img src="/images/resume-scan-2.gif" className="w-1/2" />
+                            <p className="text-gray-500 mt-4 animate-pulse text-center">Reading your resume data...</p>
+                        </div>
                     )}
                 </section>
             </div>

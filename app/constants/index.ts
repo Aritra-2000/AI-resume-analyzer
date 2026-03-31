@@ -183,51 +183,63 @@ export const resumes: Resume[] = [
 
 export const AIResponseFormat = `
       interface Feedback {
-      overallScore: number; //max 100
+      overallScore: number; // Weighted average — compute as: ATS*0.35 + content*0.25 + skills*0.20 + structure*0.12 + toneAndStyle*0.08. Round to nearest integer.
       ATS: {
-        score: number; //rate based on ATS suitability
+        score: number; // 0-100. Rate purely on ATS keyword matching, formatting compatibility, and parsability.
         tips: {
           type: "good" | "improve";
-          tip: string; //give 3-4 tips
+          tip: string; // give 3-4 tips
         }[];
       };
       toneAndStyle: {
-        score: number; //max 100
+        score: number; // 0-100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string; // short title
+          explanation: string; // detailed explanation
+        }[]; // give 3-4 tips
       };
       content: {
-        score: number; //max 100
+        score: number; // 0-100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string;
+          explanation: string;
+        }[]; // give 3-4 tips
       };
       structure: {
-        score: number; //max 100
+        score: number; // 0-100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string;
+          explanation: string;
+        }[]; // give 3-4 tips
       };
       skills: {
-        score: number; //max 100
+        score: number; // 0-100
         tips: {
           type: "good" | "improve";
-          tip: string; //make it a short "title" for the actual explanation
-          explanation: string; //explain in detail here
-        }[]; //give 3-4 tips
+          tip: string;
+          explanation: string;
+        }[]; // give 3-4 tips
       };
-    }`;
+    }
+
+    SCORING CALIBRATION — follow these anchors strictly, do NOT inflate scores:
+    - 90-100: Exceptional. Near-perfect. Almost no room for improvement.
+    - 70-89:  Good. Solid resume with only minor issues.
+    - 50-69:  Average. Noticeable gaps or weaknesses. Needs improvement.
+    - 30-49:  Poor. Multiple significant issues. Will likely be rejected by ATS.
+    - 0-29:   Very poor. Major structural or content issues.
+    A typical resume scores between 45-75. Only truly outstanding resumes score above 85.
+    Do NOT give high scores just to be encouraging — low scores help users improve.
+    All scores MUST be integers between 0 and 100 (inclusive).`;
 
 export const prepareInstructions = ({jobTitle, jobDescription}: { jobTitle: string; jobDescription: string; }) =>
     `You are an expert in ATS (Applicant Tracking System) and resume analysis.
-      Please analyze and rate this resume and suggest how to improve it.
+      Please analyze the ATTACHED RESUME FILE (image or PDF) and rate it against the job details provided below.
+      IMPORTANT: If you cannot see the file, please state specifically what you are missing.
+      Please rate and suggest how to improve the resume.
       The rating can be low if the resume is bad.
       Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
       If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
